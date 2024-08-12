@@ -1,1 +1,73 @@
+import java.util.Scanner;
+
+public class StudentGradeCalculator {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the number of subjects: ");
+        int numSubjects = scanner.nextInt();
+
+        String[] subjectNames = new String[numSubjects];
+        int[] maxMarksPerSubject = new int[numSubjects];
+        int[] marks = new int[numSubjects];
+      
+        int[] totalMarksPerSubject = new int[numSubjects];
+
+        for (int i = 0; i < numSubjects; i++) {
+            System.out.print("Enter subject name for subject " + (i + 1) + ": ");
+            subjectNames[i] = scanner.next();
+
+            System.out.print("Enter maximum marks for " + subjectNames[i] + ": ");
+            maxMarksPerSubject[i] = scanner.nextInt();
+
+            System.out.print("Enter marks for " + subjectNames[i] + " (out of " + maxMarksPerSubject[i] + "): ");
+            marks[i] = scanner.nextInt();
+
+            
+            totalMarksPerSubject[i] = marks[i];
+        }
+
+        int grandTotalMarks = calculateTotalMarks(marks);
+        double averagePercentage = (double) grandTotalMarks / numSubjects;
+        String grade = calculateGrade(averagePercentage);
+
+        System.out.println("\nSubject\t\tMax Marks\t\tMarks");
+        System.out.println("-------\t\t-------\t\t-------");
+        for (int i = 0; i < numSubjects; i++) {
+            int maxSubjectNameLength = subjectNames[i].length();
+            int maxMaxMarksLength = String.valueOf(maxMarksPerSubject[i]).length();
+            System.out.println(subjectNames[i] + "\t\t" +
+                    String.format("%" + (maxMaxMarksLength + 3) + "d", maxMarksPerSubject[i]) +
+                    "\t\t" + String.format("%" + (maxSubjectNameLength + 3) + "d", marks[i]));
+        }
+
+        System.out.println("\nGrand Total Marks: " + grandTotalMarks);
+        System.out.println("Average Percentage: " + averagePercentage);
+        System.out.println("Grade: " + grade);
+
+        scanner.close();
+    }
+
+    public static int calculateTotalMarks(int[] marks) {
+        int total = 0;
+        for (int mark : marks) {
+            total += mark;
+        }
+        return total;
+    }
+
+    public static String calculateGrade(double averagePercentage) {
+        if (averagePercentage >= 90) {
+            return "A";
+        } else if (averagePercentage >= 80) {
+            return "B";
+        } else if (averagePercentage >= 70) {
+            return "C";
+        } else if (averagePercentage >= 60) {
+            return "D";
+        } else {
+            return "F";
+        }
+    }
+}
 
