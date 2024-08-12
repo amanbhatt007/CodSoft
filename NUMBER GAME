@@ -1,1 +1,99 @@
+import java.util.Scanner;
+import java.util.Random;
+
+public class NumberGuessingGame {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
+
+       
+        int difficulty = chooseDifficulty(scanner);
+        int maxAttempts = setAttempts(difficulty);
+        int range = setRange(difficulty); 
+
+        int score = 0;
+        boolean playAgain = true;
+
+        while (playAgain) {
+            int numberToGuess = random.nextInt(range) + 1;
+            int attempts = 0;
+
+            System.out.println("Guess a number between 1 and " + range + ". You have " + maxAttempts + " attempts.");
+
+            while (attempts < maxAttempts) {
+                System.out.print("Enter your guess: ");
+                int guess = scanner.nextInt();
+                attempts++;
+
+                int difference = guess - numberToGuess;
+
+                if (guess == numberToGuess) {
+                    System.out.println("Congratulations! You guessed the number in " + attempts + " attempts.");
+                    score++;
+                    break;
+                } else {
+                    String hint;
+                    if (Math.abs(difference) <= 10) {
+                        hint = (difference > 0) ? "You're very close! Guess a little lower." : "You're very close! Guess a little higher.";
+                    } else if (Math.abs(difference) <= 20) {
+                        hint = (difference > 0) ? "Getting warmer! Guess lower." : "Getting warmer! Guess higher.";
+                    } else {
+                        hint = (difference > 0) ? "Too high. Try a much lower number." : "Too low. Try a much higher number.";
+                    }
+                    System.out.println(hint);
+                }
+            }
+
+            if (attempts == maxAttempts) {
+                System.out.println("Sorry, you ran out of attempts. The number was: " + numberToGuess);
+            }
+
+            System.out.println("Your score: " + score);
+
+            System.out.print("Do you want to play again? (yes/no): ");
+            String answer = scanner.next();
+            playAgain = answer.equalsIgnoreCase("yes");
+        }
+
+        System.out.println("Thanks for playing!");
+        scanner.close();
+    }
+
+   
+    private static int chooseDifficulty(Scanner scanner) {
+        System.out.println("Choose difficulty:");
+        System.out.println("1. Easy");
+        System.out.println("2. Medium (default)");
+        System.out.println("3. Hard");
+        int choice = scanner.nextInt();
+        return Math.min(choice, 3); 
+    }
+
+    private static int setAttempts(int difficulty) {
+        switch (difficulty) {
+            case 1:
+                return 10;
+            case 2:
+                return 7;
+            case 3:
+                return 5;
+            default:
+                return 7; 
+        }
+    }
+
+    private static int setRange(int difficulty) {
+        switch (difficulty) {
+            case 1:
+                return 100;  
+            case 2:
+                return 100;
+            case 3:
+                return 75;  
+            default:
+                return 100;  
+        }
+    }
+}
 
