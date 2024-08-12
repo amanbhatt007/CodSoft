@@ -1,0 +1,133 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.time.LocalDateTime;
+
+class Transaction {
+    private String type;
+    private double amount;
+    private String timestamp;
+
+    public Transaction(String type, double amount) {
+        this.type = type;
+        this.amount = amount;
+        this.timestamp = LocalDateTime.now().toString();
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+}
+
+class BankAccount {
+    private double balance;
+    private ArrayList<Transaction> transactions;
+
+    public BankAccount(double initialBalance) {
+        balance = initialBalance;
+        transactions = new ArrayList<>();
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void deposit(double amount) {
+        balance += amount;
+        System.out.println("Deposit successful. New balance: Rs." + balance);
+        transactions.add(new Transaction("Deposit", amount));
+    }
+
+    public void withdraw(double amount) {
+        if (amount <= balance) {
+            balance -= amount;
+            System.out.println("Withdrawal successful. New balance: Rs." + balance);
+            transactions.add(new Transaction("Withdrawal", amount));
+        } else {
+            System.out.println("Insufficient funds.");
+        }
+    }
+
+    public ArrayList<Transaction> getTransactionHistory() {
+        return transactions;
+    }
+}
+
+class ATM {
+    private BankAccount account;
+
+    public ATM(BankAccount account) {
+        this.account = account;
+    }
+
+    public void displayMenu() {
+        System.out.println("ATM Menu");
+        System.out.println("1. Withdraw");
+        System.out.println("2. Deposit");
+        System.out.println("3. Check Balance");
+        System.out.println("4. View Transaction History");
+        System.out.println("5. Exit");
+    }
+
+    public void run() {
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+
+        do {
+            displayMenu();
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter withdrawal amount: ");
+                    double withdrawAmount = scanner.nextDouble();
+                    account.withdraw(withdrawAmount);
+                    break;
+                case 2:
+                    System.out.print("Enter deposit amount: ");
+                    double depositAmount = scanner.nextDouble();
+                    account.deposit(depositAmount);
+                    break;
+                case 3:
+                    System.out.println("Your balance is: Rs." + account.getBalance());
+                    break;
+                case 4:
+                    displayTransactionHistory();
+                    break;
+                case 5:
+                    System.out.println("Thank you for using the ATM.");
+                    break;
+                default:
+                    System.out.println("Invalid choice.");
+            }
+        } while (choice != 5);
+    }
+
+    private void displayTransactionHistory() {
+        ArrayList<Transaction> history = account.getTransactionHistory();
+        if (history.isEmpty()) {
+            System.out.println("No transactions found.");
+        } else {
+            System.out.println("Transaction History:");
+            for (Transaction transaction : history) {
+                System.out.println(transaction.getTimestamp() + " - " + transaction.getType() + ": Rs." + transaction.getAmount());
+            }
+        }
+    }
+}
+
+public class ATMInterface {
+    public static void main(String[] args) {
+        BankAccount account = new BankAccount(1000);
+        ATM atm = new ATM(account);
+        atm.run();
+    }
+}
